@@ -20,3 +20,72 @@ It currently lacks:
 * write interface to use `DoPut` to write Spark dataframes back to an Arrow Flight endpoint
 * leverage the transactional capabilities of the Spark Source V2 interface
 * publish benchmark test
+
+
+## Difference here and Spark
+
+```
+//Missing in spark's ArrowColumnVector - Start
+  private static class DateMilliAccessor extends ArrowVectorAccessor {
+
+    private final DateMilliVector accessor;
+    private final double val = 1.0 / (24. * 60. * 60. * 1000.);
+
+    DateMilliAccessor(DateMilliVector vector) {
+      super(vector);
+      this.accessor = vector;
+    }
+
+    @Override
+    final int getInt(int rowId) {
+      System.out.println(accessor.get(rowId) + " " + (accessor.get(rowId) * val) + " " + val);
+      return (int) (accessor.get(rowId) * val);
+    }
+  }
+
+  private static class TimestampMicroAccessor extends ArrowVectorAccessor {
+
+    private final TimeStampVector accessor;
+
+    TimestampMicroAccessor(TimeStampMicroVector vector) {
+      super(vector);
+      this.accessor = vector;
+    }
+
+    @Override
+    final long getLong(int rowId) {
+      return accessor.get(rowId);
+    }
+  }
+
+  private static class TimestampMicroTZAccessor extends ArrowVectorAccessor {
+
+    private final TimeStampVector accessor;
+
+    TimestampMicroTZAccessor(TimeStampMicroTZVector vector) {
+      super(vector);
+      this.accessor = vector;
+    }
+
+    @Override
+    final long getLong(int rowId) {
+      return accessor.get(rowId);
+    }
+  }
+
+  private static class TimestampMilliAccessor extends ArrowVectorAccessor {
+
+    private final TimeStampVector accessor;
+
+    TimestampMilliAccessor(TimeStampMilliVector vector) {
+      super(vector);
+      this.accessor = vector;
+    }
+
+    @Override
+    final long getLong(int rowId) {
+      return accessor.get(rowId) * 1000;
+    }
+  }
+  //Missing in spark's ArrowColumnVector - End
+```

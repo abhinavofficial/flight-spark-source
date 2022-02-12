@@ -83,7 +83,7 @@ public class FlightDataReader implements InputPartitionReader<ColumnarBatch> {
     ColumnarBatch batch = new ColumnarBatch(
       stream.getRoot().getFieldVectors()
         .stream()
-        .map(FlightArrowColumnVector::new)
+        .map(ArrowColumnVector::new)
         .toArray(ColumnVector[]::new)
     );
     batch.setNumRows(stream.getRoot().getRowCount());
